@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Model Evaluation</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <h1>ML Model Evaluation</h1>
+
+        <p>Performance metrics of the disease prediction model</p>
+
+    </div>
+
+
+    <div class="symptoms">
+
+        <div class="card">
+
+            <h2>Accuracy</h2>
+
+            <h1>{{ metrics["Accuracy"] }}</h1>
+
+            <p>Overall correct predictions</p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>Precision</h2>
+
+            <h1>{{ metrics["Precision"] }}</h1>
+
+            <p>Correctness of positive predictions</p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>Recall</h2>
+
+            <h1>{{ metrics["Recall"] }}</h1>
+
+            <p>Ability to identify actual classes</p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>F1 Score</h2>
+
+            <h1>{{ metrics["F1 Score"] }}</h1>
+
+            <p>Balance between precision and recall</p>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>About the Model</h2>
+
+        <p>
+            The system uses a Random Forest classification
+            algorithm to predict a possible disease based on
+            selected symptoms.
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

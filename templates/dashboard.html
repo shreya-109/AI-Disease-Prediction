@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+```
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Disease Prediction | Dashboard</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}">
+```
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+```
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar">
+
+    <div class="brand">
+
+        <div class="brand-icon">AI</div>
+
+        <div>
+
+            <h2>MedPredict</h2>
+
+            <span>AI Health Assistant</span>
+
+        </div>
+
+    </div>
+
+    <nav>
+
+        <a href="{{ url_for('dashboard') }}"
+           class="nav-item active">
+
+            <span>📊</span>
+            Dashboard
+
+        </a>
+
+        <a href="{{ url_for('home') }}"
+           class="nav-item">
+
+            <span>🩺</span>
+            Make Prediction
+
+        </a>
+
+        <a href="{{ url_for('history') }}"
+           class="nav-item">
+
+            <span>📋</span>
+            Prediction History
+
+        </a>
+
+        <a href="{{ url_for('evaluation') }}"
+           class="nav-item">
+
+            <span>📈</span>
+            Model Evaluation
+
+        </a>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+
+        <div class="security-box">
+
+            <div class="security-icon">
+                🔒
+            </div>
+
+            <div>
+
+                <strong>Private & Secure</strong>
+
+                <p>
+                    Your prediction data is protected.
+                </p>
+
+            </div>
+
+        </div>
+
+        <a href="{{ url_for('logout') }}"
+           class="logout">
+
+            🚪 Logout
+
+        </a>
+
+    </div>
+
+</aside>
+
+
+<!-- ================= MAIN CONTENT ================= -->
+
+<main class="main-content">
+
+
+    <!-- TOP BAR -->
+
+    <header class="topbar">
+
+        <div>
+
+            <p class="welcome-small">
+            </p>
+
+            <h1>
+                Dashboard
+            </h1>
+
+        </div>
+
+
+        <div class="profile">
+
+            <div class="avatar">
+
+                {{ current_user.username[0]|upper }}
+
+            </div>
+
+            <div class="profile-info">
+
+                <strong>
+                    {{ current_user.username }}
+                </strong>
+
+                <span>
+                    {{ current_user.email }}
+                </span>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- ================= WELCOME CARD ================= -->
+
+    <section class="welcome-card">
+
+        <div>
+
+            <p class="welcome-label">
+                WELCOME BACK 👋
+            </p>
+
+            <h2>
+                Hello, {{ current_user.username }}!
+            </h2>
+
+            <p>
+
+                Monitor your AI-based disease predictions,
+                review your history and explore model performance.
+
+            </p>
+
+            <a href="{{ url_for('home') }}"
+               class="primary-btn">
+
+                + Make New Prediction
+
+            </a>
+
+        </div>
+
+
+        <div class="welcome-illustration">
+            🩺
+        </div>
+
+    </section>
+
+
+    <!-- ================= STAT CARDS ================= -->
+
+    <section class="stats-grid">
+
+
+        <!-- TOTAL PREDICTIONS -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon blue">
+                🧠
+            </div>
+
+            <div>
+
+                <p>
+                    Total Predictions
+                </p>
+
+                <h2>
+                    {{ stats["total_predictions"] }}
+                </h2>
+
+                <span class="stat-description">
+                    Predictions made
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- AVERAGE CONFIDENCE -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon green">
+                ✓
+            </div>
+
+            <div>
+
+                <p>
+                    Average Confidence
+                </p>
+
+                <h2>
+                    {{ stats["average_confidence"] }}%
+                </h2>
+
+                <span class="stat-description">
+                    Model confidence
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- MOST PREDICTED DISEASE -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon purple">
+                🔬
+            </div>
+
+            <div>
+
+                <p>
+                    Most Predicted
+                </p>
+
+                <h2 class="disease-name">
+                    {{ stats["most_predicted_disease"] }}
+                </h2>
+
+                <span class="stat-description">
+                    Based on your history
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- LATEST ACTIVITY -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon orange">
+                📅
+            </div>
+
+            <div>
+
+                <p>
+                    Latest Activity
+                </p>
+
+                <h2>
+
+                    {% if predictions %}
+                        Recent
+                    {% else %}
+                        —
+                    {% endif %}
+
+                </h2>
+
+                <span class="stat-description">
+                    Recent prediction
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= RECENT PREDICTIONS ================= -->
+
+    <section class="content-card">
+
+        <div class="section-header">
+
+            <div>
+
+                <h2>
+                    Recent Predictions
+                </h2>
+
+                <p>
+                    Your latest AI prediction activity
+                </p>
+
+            </div>
+
+
+            <a href="{{ url_for('history') }}"
+               class="view-all">
+
+                View All →
+
+            </a>
+
+        </div>
+
+
+        {% if predictions %}
+
+        <div class="prediction-table">
+
+
+            <!-- TABLE HEADER -->
+
+            <div class="table-header">
+
+                <span>
+                    Disease
+                </span>
+
+                <span>
+                    Confidence
+                </span>
+
+                <span>
+                    Symptoms
+                </span>
+
+                <span>
+                    Date
+                </span>
+
+            </div>
+
+
+            <!-- PREDICTIONS -->
+
+            {% for prediction in predictions %}
+
+            <div class="table-row">
+
+
+                <!-- DISEASE -->
+
+                <div class="disease-cell">
+
+                    <div class="disease-icon">
+                        🩺
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            {{ prediction["disease"] }}
+                        </strong>
+
+                        <small>
+                            AI Prediction
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CONFIDENCE -->
+
+                <div>
+
+                    <div class="confidence-wrapper">
+
+                        <span>
+                            {{ prediction["confidence"] }}%
+                        </span>
+
+                        <div class="progress">
+
+                            <div
+                                class="progress-bar"
+                                style="width: {{ prediction["confidence"] }}%;">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SYMPTOMS -->
+
+                <div class="symptoms">
+
+                    {{ prediction["symptoms"] }}
+
+                </div>
+
+
+                <!-- DATE -->
+
+                <div class="date">
+
+                    {{ prediction["created_at"] }}
+
+                </div>
+
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        {% else %}
+
+
+        <!-- EMPTY STATE -->
+
+        <div class="empty-state">
+
+            <div>
+                🩺
+            </div>
+
+            <h3>
+                No predictions yet
+            </h3>
+
+            <p>
+
+                Make your first AI disease prediction
+                to see it here.
+
+            </p>
+
+            <a href="{{ url_for('home') }}"
+               class="primary-btn">
+
+                Make Prediction
+
+            </a>
+
+        </div>
+
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- ================= INFORMATION ================= -->
+
+    <section class="info-grid">
+
+
+        <div class="info-card">
+
+            <div class="info-icon">
+                🤖
+            </div>
+
+            <div>
+
+                <h3>
+                    AI-Powered Prediction
+                </h3>
+
+                <p>
+
+                    The system uses a machine learning model
+                    trained on symptom-disease data to generate
+                    predictions.
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <div class="info-icon">
+                ⚠️
+            </div>
+
+            <div>
+
+                <h3>
+                    Important Notice
+                </h3>
+
+                <p>
+
+                    This system is an educational AI project
+                    and should not be used as a replacement
+                    for professional medical diagnosis.
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+</div>
+
+</body>
+
+</html>

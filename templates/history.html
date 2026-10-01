@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Prediction History</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <h1>Prediction History</h1>
+
+        <p>Previous disease prediction results</p>
+
+        <br>
+
+        <a href="{{ url_for('dashboard') }}">
+            ← Back to Dashboard
+        </a>
+
+    </div>
+
+
+    <div class="card">
+
+        {% if predictions %}
+
+        <table style="width:100%; border-collapse:collapse;">
+
+            <thead>
+
+                <tr>
+
+                    <th style="padding:12px; text-align:left;">
+                        ID
+                    </th>
+
+                    <th style="padding:12px; text-align:left;">
+                        Symptoms
+                    </th>
+
+                    <th style="padding:12px; text-align:left;">
+                        Disease
+                    </th>
+
+                    <th style="padding:12px; text-align:left;">
+                        Confidence
+                    </th>
+
+                    <th style="padding:12px; text-align:left;">
+                        Date
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for prediction in predictions %}
+
+                <tr>
+
+                    <td style="padding:12px;">
+                        {{ prediction["id"] }}
+                    </td>
+
+                    <td style="padding:12px;">
+                        {{ prediction["symptoms"] }}
+                    </td>
+
+                    <td style="padding:12px;">
+                        {{ prediction["disease"] }}
+                    </td>
+
+                    <td style="padding:12px;">
+                        {{ prediction["confidence"] }}%
+                    </td>
+
+                    <td style="padding:12px;">
+                        {{ prediction["created_at"] }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+
+        <br><br>
+
+        <a href="{{ url_for('home') }}">
+            + Make New Prediction
+        </a>
+
+
+        {% else %}
+
+        <div style="text-align:center; padding:40px;">
+
+            <h2>No Predictions Yet</h2>
+
+            <p>
+                You haven't made any disease predictions yet.
+            </p>
+
+            <br>
+
+            <a href="{{ url_for('home') }}">
+                + Make Your First Prediction
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
+
